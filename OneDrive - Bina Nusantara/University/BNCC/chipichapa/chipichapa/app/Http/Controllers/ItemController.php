@@ -111,4 +111,23 @@ class ItemController extends Controller
         
         return redirect()->route('view')->with('success', 'Item successfully deleted!');
     }
+
+    public function add(Request $request, $id)
+{
+    $item = Item::findOrFail($id);
+    
+    $cart = session()->get('cart', []);
+
+    $cart[$id] = [
+        'name' => $item->name,
+        'price' => $item->price,
+        'quantity' => 1,
+        'image' => $item->image,
+    ];
+
+    session()->put('cart', $cart);
+
+    return back()->with('success', 'Item added to cart!');
+}
+
 }

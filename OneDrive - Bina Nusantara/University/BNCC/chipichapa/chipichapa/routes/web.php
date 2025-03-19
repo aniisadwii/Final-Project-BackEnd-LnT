@@ -6,6 +6,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\InvoiceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,7 +31,6 @@ Route::get('/about', function () {
     return view('about');
 });
 
-//USER CONTROLLER
 Route::get('/register', [UserController::class, 'register']);
 Route::POST('/register-user', [UserController::class, 'createUser']);
 Route::get('/login', [UserController::class, 'login'])->name('login');
@@ -40,11 +40,24 @@ Route::middleware('auth')->group(function() {
     Route::get('/items', [ItemController::class, 'viewItem'])->name('view');
     Route::POST('/logout', [UserController::class, 'logout']);
 
-    Route::POST('/cart/add/{id}', [CartController::class, 'cartStore'])->name('cart.add');
+    Route::post('/cart/add/{id}', [CartController::class, 'add'])->name('cart.add');
+
 
     Route::get('/cart', [CartController::class, 'getCart'])->name('getCart');
-    // Route::POST('/add-to-cart', [CartController::class, 'cartStore'])->name('cartStore');
+    Route::get('/invoice', [CartController::class, 'showInvoice'])->name('invoice.show');
+    Route::post('/invoice/submit', [CartController::class, 'submitInvoice'])->name('invoice.submit');
+
+    Route::post('/invoice/submit', [InvoiceController::class, 'store'])->name('invoice.submit');
+    Route::get('/invoice/{id}', [InvoiceController::class, 'show'])->name('invoice.show');
+
     Route::DELETE('/remove-cart-item', [CartController::class, 'removeItem'])->name('removeItem');
+
+    Route::get('/checkout', [InvoiceController::class, 'show'])->name('invoice.show');
+    Route::post('/checkout', [InvoiceController::class, 'processCheckout'])->name('checkout');
+    Route::get('/checkout', [InvoiceController::class, 'checkoutPage'])->name('checkout.page');
+
+    Route::get('/catalog', [ItemController::class, 'index'])->name('item.catalog');
+
 });
 
 Route::middleware('admin')->group(function(){
@@ -57,13 +70,6 @@ Route::middleware('admin')->group(function(){
     Route::get('/update/{item}', [ItemController::class, 'getItemById'])->name('updateItemPage');
 
     Route::put('/items/{item}', [ItemController::class, 'updateItem'])->name('items.update');
-
-    // Route::patch('/update/{item}', [ItemController::class, 'updateItem'])->name('updateItem');
-    // Route::put('/update/{item}', [ItemController::class, 'updateItem'])->name('items.update');
-    // Route::put('/item/{item}', [ItemController::class, 'updateItem'])->name('updateItem');
-    // Route::put('/items/{id}', [ItemController::class, 'updateItem'])->name('items.update');
-
-    
 
     Route::delete('/item/{item}', [ItemController::class, 'deleteItem'])->name('deleteItem');
 

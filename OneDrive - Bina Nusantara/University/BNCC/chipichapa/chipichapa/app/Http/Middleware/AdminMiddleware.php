@@ -19,20 +19,12 @@ class AdminMiddleware
     {
         if(Auth::check()){
             if(Auth::user()->role !== 'admin'){
-                return redirect('/view-books');
+                return redirect('/catalog');
             }
         }
         else{
             return redirect('/register');
         }
         return $next($request);
-        
-        // if (!Auth::check()) {
-        //     return redirect('/login'); // Jika tidak login, ke login
-        // }
-    
-        // if (Auth::user()->role !== 'admin') {
-        //     abort(403, 'Unauthorized action.'); // Jika bukan admin, tampilkan error 403
-        // }
     }
 }
