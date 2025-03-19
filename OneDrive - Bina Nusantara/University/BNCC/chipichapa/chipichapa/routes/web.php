@@ -48,8 +48,9 @@ Route::middleware('auth')->group(function() {
 });
 
 Route::middleware('admin')->group(function(){
+    Route::post('/items/store', [ItemController::class, 'store'])->name('items.store');
 
-    Route::get('/create',  [ItemController::class, 'createPage'])->name('create');
+    Route::get('/create', [ItemController::class, 'createPage'])->name('create-item');    
 
     Route::POST('/create-item', [ItemController::class, 'createItem']);
 

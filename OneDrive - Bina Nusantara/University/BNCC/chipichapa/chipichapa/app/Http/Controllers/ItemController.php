@@ -42,6 +42,29 @@ class ItemController extends Controller
         return redirect('/items')->with('success', 'Item successfully created!');
     }
 
+    public function store(Request $request) {
+        // Validasi input
+        $request->validate([
+            'name' => 'required|min:5|max:80',
+            'price' => 'required|numeric',
+            'quantity' => 'required|integer|min:1',
+            'image' => 'required|image',
+            'category_id' => 'required|exists:categories,id',
+        ]);
+    
+        // Simpan data item ke database
+        Item::create([
+            'name' => $request->name,
+            'price' => $request->price,
+            'quantity' => $request->quantity,
+            'image' => $request->file('image')->store('items', 'public'),
+            'category_id' => $request->category_id,
+        ]);
+    
+        return redirect()->route('view')->with('success', 'Item berhasil ditambahkan');
+    }
+    
+
     public function getItemById(Item $item) // Route Model Binding
     {
         return view('admin.update-item', [
